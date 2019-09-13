@@ -4,7 +4,10 @@ import Main.Handler;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.util.Random;
+
+import Game.GameStates.State;
 
 /**
  * Created by AlexVR on 7/2/2018.
@@ -17,6 +20,7 @@ public class Player {
     public int speed;
     public int xCoord;
     public int yCoord;
+    public double score;
 
     public int moveCounter;
 
@@ -31,6 +35,7 @@ public class Player {
         justAte = false;
         lenght= 1;
         speed = 8;
+        score = 0;
 
     }
 
@@ -40,13 +45,13 @@ public class Player {
             checkCollisionAndMove();
             moveCounter=0;
         }
-        if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_UP)){
+        if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_UP)&&(direction!="Down")){
             direction="Up";
-        }else if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_DOWN)){
+        }else if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_DOWN)&&(direction!="Up")){
             direction="Down";
-        }else if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_LEFT)){
+        }else if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_LEFT)&&(direction!="Right")){
             direction="Left";
-        }else if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_RIGHT)){
+        }else if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_RIGHT)&&(direction!="Left")){
             direction="Right";
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_MINUS)){
         	speed++;
@@ -54,7 +59,10 @@ public class Player {
         	speed--;
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_N)){
         	addTail();
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_ESCAPE)){
+            State.setState(handler.getGame().pauseState);
         }
+
 
 
 
@@ -67,28 +75,28 @@ public class Player {
         switch (direction){
             case "Left":
                 if(xCoord==0){
-                    kill();
+                	xCoord=handler.getWorld().GridWidthHeightPixelCount-1;
                 }else{
                     xCoord--;
                 }
                 break;
             case "Right":
                 if(xCoord==handler.getWorld().GridWidthHeightPixelCount-1){
-                    kill();
+                	xCoord=0;
                 }else{
                     xCoord++;
                 }
                 break;
             case "Up":
                 if(yCoord==0){
-                    kill();
+                	yCoord=handler.getWorld().GridWidthHeightPixelCount-1;
                 }else{
                     yCoord--;
                 }
                 break;
             case "Down":
                 if(yCoord==handler.getWorld().GridWidthHeightPixelCount-1){
-                    kill();
+                	yCoord=0;
                 }else{
                     yCoord++;
                 }
@@ -125,6 +133,8 @@ public class Player {
             }
         }
 
+        g.setFont(new Font("serif", Font.PLAIN, 30));
+        g.drawString("Score: "+String.valueOf(new DecimalFormat("##.##").format(score)),10, 40);
 
     }
 
@@ -132,6 +142,7 @@ public class Player {
         handler.getWorld().appleLocation[xCoord][yCoord]=false;
         handler.getWorld().appleOnBoard=false;
         addTail();
+        score += Math.sqrt(2*(score+1));
     }
 
     public void addTail() {
