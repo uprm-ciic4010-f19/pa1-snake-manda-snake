@@ -11,11 +11,24 @@ public class Apple {
 
     public int xCoord;
     public int yCoord;
+    
+    private boolean good;
+    public int steps;
 
     public Apple(Handler handler,int x, int y){
         this.handler=handler;
         this.xCoord=x;
         this.yCoord=y;
+        this.good = true;
+        this.steps = 0;
+    }
+    
+    public boolean isGood() {
+    	return good;
+    }
+    
+    public void setGood(boolean var) {
+    	this.good = var;
     }
 
 

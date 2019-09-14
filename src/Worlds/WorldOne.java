@@ -11,6 +11,8 @@ import java.util.Random;
  */
 public class WorldOne extends WorldBase{
 
+	int counter = 0;
+	
     public WorldOne (Handler handler) {
         super(handler);
 
@@ -42,6 +44,16 @@ public class WorldOne extends WorldBase{
             apple = new Apple(handler,appleX,appley);
             appleLocation[appleX][appley]=true;
 
+        }
+        else {
+        	counter++;
+        	if (counter % player.speed == 0) {
+        		apple.steps++;
+        	}
+        	
+        	if (apple.steps >= 100) {
+        		apple.setGood(false);
+        	}
         }
     }
 
